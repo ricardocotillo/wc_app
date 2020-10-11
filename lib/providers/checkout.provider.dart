@@ -1,0 +1,3 @@
+class CheckoutProvider {
+  String address;
+}
