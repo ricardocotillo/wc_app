@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:wc_app/providers/checkout.provider.dart';
 import 'package:wc_app/views/checkout/orderInfo.view.dart';
+import 'package:wc_app/views/checkout/personalInfo.view.dart';
 
 class AddressView extends StatefulWidget {
   @override
@@ -46,7 +47,7 @@ class _AddressViewState extends State<AddressView> {
               onPressed: () {
                 _checkoutProvider.address = _address;
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => OrderInfoView(),
+                  builder: (context) => PersonalInfoView(),
                 ));
               },
               child: Icon(FontAwesomeIcons.check),
@@ -93,10 +94,5 @@ class _AddressViewState extends State<AddressView> {
         ),
       ),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }

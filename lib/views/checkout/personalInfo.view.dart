@@ -1,0 +1,100 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:wc_app/components/input.component.dart';
+import 'package:wc_app/providers/checkout.provider.dart';
+
+class PersonalInfoView extends StatefulWidget {
+  @override
+  _PersonalInfoViewState createState() => _PersonalInfoViewState();
+}
+
+class _PersonalInfoViewState extends State<PersonalInfoView> {
+  final TextEditingController _nameController = TextEditingController(),
+      _lastNameController = TextEditingController(),
+      _idNumberController = TextEditingController(),
+      _phoneController = TextEditingController(),
+      _emailController = TextEditingController();
+
+  int _idType;
+
+  @override
+  Widget build(BuildContext context) {
+    final CheckoutProvider _checkoutProvider =
+        Provider.of<CheckoutProvider>(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Informacion personal'),
+        centerTitle: true,
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.check),
+        onPressed: () {},
+      ),
+      body: SafeArea(
+        child: Form(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              InputComponent(
+                controller: _nameController,
+                hint: 'Nombre',
+              ),
+              InputComponent(
+                controller: _lastNameController,
+                hint: 'Apellidos',
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18.0,
+                  vertical: 10.0,
+                ),
+                child: DropdownButtonFormField(
+                  hint: Text('Tipo de Documento'),
+                  items: <DropdownMenuItem<int>>[
+                    DropdownMenuItem<int>(
+                      child: Text('DNI'),
+                      value: 0,
+                    ),
+                    DropdownMenuItem<int>(
+                      child: Text('Carnet de Extranjería'),
+                      value: 1,
+                    ),
+                    DropdownMenuItem<int>(
+                      child: Text('Pasaporte'),
+                      value: 2,
+                    ),
+                  ],
+                  onChanged: (int v) {
+                    setState(() {
+                      _idType = v;
+                    });
+                  },
+                  value: _idType,
+                ),
+              ),
+              InputComponent(
+                controller: _idNumberController,
+                hint: 'Número de Documento',
+                keyboard: TextInputType.number,
+              ),
+              InputComponent(
+                controller: _phoneController,
+                hint: 'Teléfono',
+                keyboard: TextInputType.phone,
+              ),
+              InputComponent(
+                controller: _emailController,
+                hint: 'Dirección de Correo',
+                keyboard: TextInputType.emailAddress,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -108,7 +108,7 @@ class CartView extends StatelessWidget {
                 onPressed: () {
                   if (_customerProvider.isLoggedIn) {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => OrderInfoView(),
+                      builder: (context) => AddressView(),
                     ));
                   } else {
                     Navigator.of(context).push(MaterialPageRoute(

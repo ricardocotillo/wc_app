@@ -78,7 +78,9 @@ class InputComponentState extends State<InputComponent> {
                           Icons.close,
                           color: Colors.red,
                         )
-                      : isChecked ? Icon(Icons.done) : null,
+                      : isChecked
+                          ? Icon(Icons.done)
+                          : null,
                   hintStyle: TextStyle(
                     color: Colors.grey[400],
                     fontSize: 16,
