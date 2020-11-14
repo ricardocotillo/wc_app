@@ -1,8 +1,8 @@
 import 'package:woocommerce/woocommerce.dart';
 
 WooCommerce woocommerce = WooCommerce(
-  baseUrl: 'https://nk.cotillo.tech',
-  consumerKey: 'ck_1d41f98264003f1be92c8109a6e4213c6e6ef754',
-  consumerSecret: 'cs_ec2c200026a509dce7f70cf62aa63d5590843257',
+  baseUrl: 'https://dev.bp-peru.com',
+  consumerKey: 'ck_4850d5866bf4b56ce5b4ecbec860da423bc851af',
+  consumerSecret: 'cs_70226b3d1420e52a51689fc32fcfe359e617b8e1',
   isDebug: true,
 );
