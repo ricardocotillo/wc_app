@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:wc_app/common/errors.common.dart';
 import 'package:wc_app/components/input.component.dart';
 import 'package:wc_app/providers/checkout.provider.dart';
 
@@ -18,6 +19,17 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
 
   int _idType;
 
+  final GlobalKey<InputComponentState> _nameKey =
+      GlobalKey<InputComponentState>();
+  final GlobalKey<InputComponentState> _lastNameKey =
+      GlobalKey<InputComponentState>();
+  final GlobalKey<InputComponentState> _idNumKey =
+      GlobalKey<InputComponentState>();
+  final GlobalKey<InputComponentState> _phoneKey =
+      GlobalKey<InputComponentState>();
+  final GlobalKey<InputComponentState> _emailKey =
+      GlobalKey<InputComponentState>();
+
   @override
   Widget build(BuildContext context) {
     final CheckoutProvider _checkoutProvider =
@@ -29,7 +41,19 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
-        onPressed: () {},
+        onPressed: () {
+          if (_nameKey.currentState.validate() &&
+              _lastNameKey.currentState.validate() &&
+              _idNumKey.currentState.validate() &&
+              _phoneKey.currentState.validate() &&
+              _emailKey.currentState.validate()) {
+            _checkoutProvider.name = _nameController.text;
+            _checkoutProvider.lastName = _lastNameController.text;
+            _checkoutProvider.idNum = _idNumberController.text;
+            _checkoutProvider.phone = _phoneController.text;
+            _checkoutProvider.email = _emailController.text;
+          }
+        },
       ),
       body: SafeArea(
         child: Form(
@@ -40,10 +64,14 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                 height: 20,
               ),
               InputComponent(
+                key: _nameKey,
+                validator: _emptyValidate,
                 controller: _nameController,
                 hint: 'Nombre',
               ),
               InputComponent(
+                key: _lastNameKey,
+                validator: _emptyValidate,
                 controller: _lastNameController,
                 hint: 'Apellidos',
               ),
@@ -77,16 +105,22 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                 ),
               ),
               InputComponent(
+                key: _idNumKey,
+                validator: _emptyValidate,
                 controller: _idNumberController,
                 hint: 'Número de Documento',
                 keyboard: TextInputType.number,
               ),
               InputComponent(
+                key: _phoneKey,
+                validator: _emptyValidate,
                 controller: _phoneController,
                 hint: 'Teléfono',
                 keyboard: TextInputType.phone,
               ),
               InputComponent(
+                key: _emailKey,
+                validator: _emptyValidate,
                 controller: _emailController,
                 hint: 'Dirección de Correo',
                 keyboard: TextInputType.emailAddress,
@@ -96,5 +130,10 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
         ),
       ),
     );
+  }
+
+  String _emptyValidate(String s) {
+    if (s.isEmpty || s == '') return ErrorsCommon.required;
+    return null;
   }
 }
