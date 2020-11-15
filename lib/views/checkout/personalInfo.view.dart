@@ -27,8 +27,6 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       GlobalKey<InputComponentState>();
   final GlobalKey<InputComponentState> _lastNameKey =
       GlobalKey<InputComponentState>();
-  final GlobalKey<InputComponentState> _idNumKey =
-      GlobalKey<InputComponentState>();
   final GlobalKey<InputComponentState> _phoneKey =
       GlobalKey<InputComponentState>();
   final GlobalKey<InputComponentState> _emailKey =
@@ -49,7 +47,6 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
         onPressed: () {
           if (_nameKey.currentState.validate() &&
               _lastNameKey.currentState.validate() &&
-              _idNumKey.currentState.validate() &&
               _phoneKey.currentState.validate() &&
               _emailKey.currentState.validate()) {
             _checkoutProvider.name = _nameController.text;
@@ -179,6 +176,7 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
         )
       ],
     );
-    woocommerce.createOrder(orderPayload);
+    WooOrder order = await woocommerce.createOrder(orderPayload);
+    print(order.id);
   }
 }
