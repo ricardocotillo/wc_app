@@ -18,8 +18,6 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       _phoneController = TextEditingController(),
       _emailController = TextEditingController();
 
-  bool _isLoading = false;
-
   final GlobalKey<InputComponentState> _nameKey =
       GlobalKey<InputComponentState>();
   final GlobalKey<InputComponentState> _lastNameKey =
@@ -51,12 +49,6 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
             _checkoutProvider.phone = _phoneController.text;
             _checkoutProvider.email = _emailController.text;
           }
-          setState(() {
-            _isLoading = true;
-          });
-          setState(() {
-            _isLoading = false;
-          });
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => PayView(),
