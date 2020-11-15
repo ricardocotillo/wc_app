@@ -7,19 +7,17 @@ import 'package:wc_app/providers/cart.provider.dart';
 import 'package:wc_app/views/product/detail.view.dart';
 import 'package:woocommerce/woocommerce.dart';
 
-class ProductCompoent extends StatefulWidget {
+class ProductComponent extends StatefulWidget {
   final WooProduct product;
 
-  const ProductCompoent({Key key, this.product}) : super(key: key);
+  const ProductComponent({Key key, this.product}) : super(key: key);
 
   @override
-  _ProductCompoentState createState() => _ProductCompoentState();
+  _ProductComponentState createState() => _ProductComponentState();
 }
 
-class _ProductCompoentState extends State<ProductCompoent> {
+class _ProductComponentState extends State<ProductComponent> {
   String getBrand(WooProduct product) {
-    // final brands = product.metaData.firstWhere((m) => m.key == 'brands');
-    // return brands.value;
     return null;
   }
 
@@ -32,11 +30,6 @@ class _ProductCompoentState extends State<ProductCompoent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // if ()
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-          //   child: Text(getBrand(widget.product)),
-          // ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

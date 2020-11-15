@@ -23,7 +23,9 @@ showSnackBar({
 }) {
   Color background = type == SnackBarType.info
       ? Colors.blue
-      : type == SnackBarType.danger ? Colors.red : Colors.green;
+      : type == SnackBarType.danger
+          ? Colors.red
+          : Colors.green;
   Scaffold.of(context).showSnackBar(SnackBar(
     backgroundColor: background,
     content: Text(
@@ -42,5 +44,5 @@ enum SnackBarType {
 }
 
 String getFormattedPrice(String price) {
-  return 'S/' + double.parse(price).toStringAsFixed(2);
+  return 'S/' + price;
 }

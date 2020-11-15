@@ -43,7 +43,7 @@ class _CategoryViewState extends State<CategoryView> {
                     childAspectRatio: 0.65,
                   ),
                   itemCount: products.length,
-                  itemBuilder: (context, int i) => ProductCompoent(
+                  itemBuilder: (context, int i) => ProductComponent(
                     product: products[i],
                   ),
                 );

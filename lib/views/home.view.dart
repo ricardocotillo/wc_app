@@ -49,7 +49,7 @@ class HomeView extends StatelessWidget {
                 childAspectRatio: 0.7,
               ),
               itemCount: _mvProvider.featured.length,
-              itemBuilder: (context, int i) => ProductCompoent(
+              itemBuilder: (context, int i) => ProductComponent(
                 product: _mvProvider.featured[i],
               ),
             ),
