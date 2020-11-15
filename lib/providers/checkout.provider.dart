@@ -1,5 +1,6 @@
 class CheckoutProvider {
   String address;
+  String district;
   String name;
   String lastName;
   String idType;
