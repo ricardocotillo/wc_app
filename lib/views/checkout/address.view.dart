@@ -95,6 +95,4 @@ class _AddressViewState extends State<AddressView> {
       ),
     );
   }
-
-  String getDistrict(dynamic json) {}
 }
