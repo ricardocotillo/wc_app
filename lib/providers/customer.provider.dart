@@ -27,7 +27,7 @@ class CustomerProvider extends ChangeNotifier {
   WooCustomer get customer => _customer;
 
   set isLoggedIn(bool v) {
-    _isLoggedIn = false;
+    _isLoggedIn = v;
     notifyListeners();
   }
 }

@@ -62,6 +62,7 @@ class LoginView extends StatelessWidget {
                       );
                       return;
                     }
+                    _customerProvider.isLoggedIn = true;
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context) => HomeView(),
