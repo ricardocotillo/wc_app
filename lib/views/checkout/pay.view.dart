@@ -1,3 +1,4 @@
+import 'package:culqi_flutter/culqi_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +16,20 @@ class PayView extends StatefulWidget {
 }
 
 class _PayViewState extends State<PayView> {
+  final String culqiKey = 'sk_test_1Gv6PiIyFv6WXEp8';
   final TextEditingController _numController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _cvvController = TextEditingController();
+
+  final GlobalKey<InputComponentState> _numKey =
+      GlobalKey<InputComponentState>();
+  final GlobalKey<InputComponentState> _monthKey =
+      GlobalKey<InputComponentState>();
+  final GlobalKey<InputComponentState> _yearKey =
+      GlobalKey<InputComponentState>();
+  final GlobalKey<InputComponentState> _cvvKey =
+      GlobalKey<InputComponentState>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,34 +41,51 @@ class _PayViewState extends State<PayView> {
         title: Text('Pago'),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        onPressed: () {
-          sendOrder(_cartProvider, _checkoutProvider);
-        },
-        child: Icon(Icons.credit_card_outlined),
+      floatingActionButton: Builder(
+        builder: (context) => FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          onPressed: () async {
+            if (_numKey.currentState.validate() &&
+                _monthKey.currentState.validate() &&
+                _yearKey.currentState.validate() &&
+                _cvvKey.currentState.validate()) {
+              String err = await pay(_checkoutProvider);
+              if (err != null) {
+                Scaffold.of(context).showSnackBar(SnackBar(content: Text(err)));
+                return;
+              }
+              WooOrder order =
+                  await sendOrder(_cartProvider, _checkoutProvider);
+            }
+          },
+          child: Icon(Icons.credit_card_outlined),
+        ),
       ),
       body: Column(
         children: [
           InputComponent(
+            key: _numKey,
             validator: _emptyValidate,
             controller: _numController,
             hint: 'Número de tarjeta',
             keyboard: TextInputType.number,
           ),
           InputComponent(
+            key: _monthKey,
             validator: _emptyValidate,
             controller: _monthController,
             hint: 'Mes de expiración',
             keyboard: TextInputType.number,
           ),
           InputComponent(
+            key: _yearKey,
             validator: _emptyValidate,
             controller: _yearController,
             hint: 'Año de expiración',
             keyboard: TextInputType.number,
           ),
           InputComponent(
+            key: _cvvKey,
             validator: _emptyValidate,
             controller: _cvvController,
             hint: 'CVV',
@@ -68,7 +96,30 @@ class _PayViewState extends State<PayView> {
     );
   }
 
-  void sendOrder(
+  Future<String> pay(CheckoutProvider checkoutProvider) async {
+    CCard card = CCard(
+      cardNumber: _numController.text,
+      cvv: _cvvController.text,
+      expirationMonth: int.parse(_monthController.text),
+      expirationYear: int.parse(_yearController.text),
+      email: checkoutProvider.email,
+    );
+
+    try {
+      CToken token =
+          await createToken(card: card, apiKey: "sk_test_UTCQSGcXW8bCyU59");
+      //su token
+      print(token.id);
+      return null;
+    } on CulqiBadRequestException catch (ex) {
+      return ex.cause;
+    } on CulqiUnknownException catch (ex) {
+      //codigo de error del servidor
+      return ex.cause;
+    }
+  }
+
+  Future<WooOrder> sendOrder(
       CartProvider cartProvider, CheckoutProvider checkoutProvider) async {
     WooOrderPayload orderPayload = WooOrderPayload(
       setPaid: true,
@@ -105,6 +156,7 @@ class _PayViewState extends State<PayView> {
       ],
     );
     WooOrder order = await woocommerce.createOrder(orderPayload);
+    return order;
   }
 
   String _emptyValidate(String s) {

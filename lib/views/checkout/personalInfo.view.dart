@@ -28,6 +28,17 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       GlobalKey<InputComponentState>();
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _nameController.dispose();
+    _lastNameController.dispose();
+    _idNumberController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final CheckoutProvider _checkoutProvider =
         Provider.of<CheckoutProvider>(context);
@@ -48,13 +59,13 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
             _checkoutProvider.idNum = _idNumberController.text;
             _checkoutProvider.phone = _phoneController.text;
             _checkoutProvider.email = _emailController.text;
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => PayView(),
+              ),
+              (route) => false,
+            );
           }
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => PayView(),
-            ),
-            (route) => false,
-          );
         },
       ),
       body: SafeArea(
