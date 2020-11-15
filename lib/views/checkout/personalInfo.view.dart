@@ -6,6 +6,7 @@ import 'package:wc_app/components/input.component.dart';
 import 'package:wc_app/config/wc.config.dart';
 import 'package:wc_app/providers/cart.provider.dart';
 import 'package:wc_app/providers/checkout.provider.dart';
+import 'package:wc_app/views/checkout/orderInfo.view.dart';
 import 'package:woocommerce/models/order_payload.dart';
 import 'package:woocommerce/woocommerce.dart';
 
@@ -21,7 +22,7 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       _phoneController = TextEditingController(),
       _emailController = TextEditingController();
 
-  int _idType;
+  bool _isLoading = false;
 
   final GlobalKey<InputComponentState> _nameKey =
       GlobalKey<InputComponentState>();
@@ -55,7 +56,19 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
             _checkoutProvider.phone = _phoneController.text;
             _checkoutProvider.email = _emailController.text;
           }
+          setState(() {
+            _isLoading = true;
+          });
           sendOrders(_cartProvider, _checkoutProvider);
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => OrderInfoView(),
+            ),
+            (route) => false,
+          );
         },
       ),
       body: SafeArea(
@@ -78,42 +91,6 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                 controller: _lastNameController,
                 hint: 'Apellidos',
               ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(
-              //     horizontal: 18.0,
-              //     vertical: 10.0,
-              //   ),
-              //   child: DropdownButtonFormField(
-              //     hint: Text('Tipo de Documento'),
-              //     items: <DropdownMenuItem<int>>[
-              //       DropdownMenuItem<int>(
-              //         child: Text('DNI'),
-              //         value: 0,
-              //       ),
-              //       DropdownMenuItem<int>(
-              //         child: Text('Carnet de Extranjería'),
-              //         value: 1,
-              //       ),
-              //       DropdownMenuItem<int>(
-              //         child: Text('Pasaporte'),
-              //         value: 2,
-              //       ),
-              //     ],
-              //     onChanged: (int v) {
-              //       setState(() {
-              //         _idType = v;
-              //       });
-              //     },
-              //     value: _idType,
-              //   ),
-              // ),
-              // InputComponent(
-              //   key: _idNumKey,
-              //   validator: _emptyValidate,
-              //   controller: _idNumberController,
-              //   hint: 'Número de Documento',
-              //   keyboard: TextInputType.number,
-              // ),
               InputComponent(
                 key: _phoneKey,
                 validator: _emptyValidate,
@@ -177,6 +154,5 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       ],
     );
     WooOrder order = await woocommerce.createOrder(orderPayload);
-    print(order.id);
   }
 }
