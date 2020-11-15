@@ -56,6 +56,16 @@ class CartProvider extends ChangeNotifier {
     }
   }
 
+  void clear() {
+    _cart = WooCart(
+      currency: 'S/',
+      itemCount: 0,
+      items: <WooCartItems>[],
+      needsShipping: true,
+      totalPrice: '0.00',
+    );
+  }
+
   void deleteItem(int index) {
     _cart.items.removeAt(index);
     _updateCart();

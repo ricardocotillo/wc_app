@@ -7,6 +7,7 @@ import 'package:wc_app/components/input.component.dart';
 import 'package:wc_app/config/wc.config.dart';
 import 'package:wc_app/providers/cart.provider.dart';
 import 'package:wc_app/providers/checkout.provider.dart';
+import 'package:wc_app/views/checkout/orderInfo.view.dart';
 import 'package:woocommerce/models/order_payload.dart';
 import 'package:woocommerce/woocommerce.dart';
 
@@ -49,13 +50,24 @@ class _PayViewState extends State<PayView> {
                 _monthKey.currentState.validate() &&
                 _yearKey.currentState.validate() &&
                 _cvvKey.currentState.validate()) {
-              String err = await pay(_checkoutProvider);
+              String err = await pay(_checkoutProvider, _yearController.text);
               if (err != null) {
-                Scaffold.of(context).showSnackBar(SnackBar(content: Text(err)));
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text(err),
+                  backgroundColor: Colors.red,
+                ));
                 return;
               }
               WooOrder order =
                   await sendOrder(_cartProvider, _checkoutProvider);
+              print(order.id);
+              _cartProvider.clear();
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => OrderInfoView(),
+                ),
+                (route) => false,
+              );
             }
           },
           child: Icon(Icons.credit_card_outlined),
@@ -96,18 +108,20 @@ class _PayViewState extends State<PayView> {
     );
   }
 
-  Future<String> pay(CheckoutProvider checkoutProvider) async {
+  Future<String> pay(CheckoutProvider checkoutProvider, String year) async {
     CCard card = CCard(
       cardNumber: _numController.text,
       cvv: _cvvController.text,
       expirationMonth: int.parse(_monthController.text),
-      expirationYear: int.parse(_yearController.text),
+      expirationYear: int.parse(year),
       email: checkoutProvider.email,
     );
 
     try {
-      CToken token =
-          await createToken(card: card, apiKey: "sk_test_UTCQSGcXW8bCyU59");
+      CToken token = await createToken(
+        card: card,
+        apiKey: culqiKey,
+      );
       //su token
       print(token.id);
       return null;
