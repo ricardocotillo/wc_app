@@ -156,22 +156,20 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       billing: WooOrderPayloadBilling(
         address1: checkoutProvider.address,
         city: 'Lima',
-        country: 'Perú',
+        country: 'PE',
         email: checkoutProvider.email,
         firstName: checkoutProvider.name,
         lastName: checkoutProvider.lastName,
         phone: checkoutProvider.phone,
-        postcode: '15074',
-        state: 'LI',
+        state: checkoutProvider.getDistrictCode(),
       ),
       shipping: WooOrderPayloadShipping(
         address1: checkoutProvider.address,
         city: 'Lima',
-        country: 'Perú',
+        country: 'PE',
         firstName: checkoutProvider.name,
         lastName: checkoutProvider.lastName,
-        postcode: '15074',
-        state: 'LI',
+        state: checkoutProvider.getDistrictCode(),
       ),
       shippingLines: <ShippingLines>[
         ShippingLines(
