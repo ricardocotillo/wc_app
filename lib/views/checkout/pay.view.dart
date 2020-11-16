@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_app/common/errors.common.dart';
+import 'package:wc_app/common/functions.common.dart';
 import 'package:wc_app/components/input.component.dart';
 import 'package:wc_app/config/wc.config.dart';
 import 'package:wc_app/providers/cart.provider.dart';
@@ -50,8 +51,10 @@ class _PayViewState extends State<PayView> {
                 _monthKey.currentState.validate() &&
                 _yearKey.currentState.validate() &&
                 _cvvKey.currentState.validate()) {
+              showLoading(context);
               String err = await pay(_checkoutProvider, _yearController.text);
               if (err != null) {
+                Navigator.pop(context);
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text(err),
                   backgroundColor: Colors.red,
@@ -62,6 +65,7 @@ class _PayViewState extends State<PayView> {
                   await sendOrder(_cartProvider, _checkoutProvider);
               print(order.id);
               _cartProvider.clear();
+              Navigator.pop(context);
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => OrderInfoView(),
