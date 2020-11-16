@@ -6,6 +6,7 @@ import 'package:wc_app/common/functions.common.dart';
 import 'package:wc_app/components/button.component.dart';
 import 'package:wc_app/components/input.component.dart';
 import 'package:wc_app/providers/customer.provider.dart';
+import 'package:wc_app/views/auth/register.view.dart';
 import 'package:wc_app/views/home.view.dart';
 
 class LoginView extends StatelessWidget {
@@ -77,7 +78,11 @@ class LoginView extends StatelessWidget {
               height: 30,
             ),
             FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RegisterView(),
+                ));
+              },
               child: Text(
                 '¿No tienes una cuenta?',
                 style: TextStyle(
