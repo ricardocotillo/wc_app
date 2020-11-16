@@ -12,11 +12,6 @@ class SplashView extends StatefulWidget {
 
 class _SplashViewState extends State<SplashView> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     Future.wait([
@@ -41,8 +36,10 @@ class _SplashViewState extends State<SplashView> {
           SizedBox(
             width: size.width,
           ),
-          FlutterLogo(
-            size: 100,
+          Image.asset(
+            'assets/logos/logo_negativo.png',
+            width: 100,
+            height: 100,
           ),
           SizedBox(
             height: 20,

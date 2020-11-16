@@ -14,16 +14,16 @@ class DrawerComponent extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            FlutterLogo(
-              size: 70,
+            SizedBox(
+              height: 20,
+            ),
+            Image.asset(
+              'assets/logos/logo_original.png',
+              width: 70,
             ),
             ListTile(
               leading: Icon(Icons.home),
               title: Text('Inicio'),
-            ),
-            ListTile(
-              leading: Icon(Icons.star),
-              title: Text('Marcas'),
             ),
             _customerProvider.isLoggedIn
                 ? ListTile(

@@ -49,6 +49,11 @@ class _RegisterViewState extends State<RegisterView> {
               );
               bool created = await woocommerce.createCustomer(customer);
               if (created) {
+                _firstNameController.clear();
+                _lastNameController.clear();
+                _usernameController.clear();
+                _passwordController.clear();
+                _emailController.clear();
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text('Usuario creado'),
                 ));
