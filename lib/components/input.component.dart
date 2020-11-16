@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InputComponent extends StatefulWidget {
   final TextEditingController controller;
@@ -11,6 +12,7 @@ class InputComponent extends StatefulWidget {
   final double horizontalPadding;
   final Function onValueChanged;
   final String error;
+  final List<TextInputFormatter> inputFormatters;
 
   const InputComponent({
     Key key,
@@ -24,6 +26,7 @@ class InputComponent extends StatefulWidget {
     this.horizontalPadding = 16.0,
     this.onValueChanged,
     this.error,
+    this.inputFormatters,
   }) : super(key: key);
 
   @override
@@ -57,6 +60,7 @@ class InputComponentState extends State<InputComponent> {
             child: Padding(
               padding: EdgeInsets.only(left: 16.0),
               child: TextField(
+                inputFormatters: widget.inputFormatters,
                 onChanged: (value) => widget.onValueChanged(value),
                 style: TextStyle(
                     color: Colors.black,

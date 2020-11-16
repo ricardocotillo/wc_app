@@ -23,6 +23,11 @@ class CartProvider extends ChangeNotifier {
 
   String get totalPrice => _cart.totalPrice;
 
+  String get orderTotal => ((double.parse(_cart.totalPrice) + 10))
+      .toStringAsFixed(2)
+      .split('.')
+      .join();
+
   String get discount => _coupon.amount;
 
   String get discountedPrice => (double.parse(_cart.totalPrice) *

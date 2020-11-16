@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:culqi_flutter/culqi_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_app/common/errors.common.dart';
 import 'package:wc_app/common/functions.common.dart';
@@ -11,6 +14,7 @@ import 'package:wc_app/providers/checkout.provider.dart';
 import 'package:wc_app/views/checkout/orderInfo.view.dart';
 import 'package:woocommerce/models/order_payload.dart';
 import 'package:woocommerce/woocommerce.dart';
+import 'package:http/http.dart' as http;
 
 class PayView extends StatefulWidget {
   @override
@@ -33,6 +37,15 @@ class _PayViewState extends State<PayView> {
   final GlobalKey<InputComponentState> _cvvKey =
       GlobalKey<InputComponentState>();
 
+  final MaskTextInputFormatter yearFormatter =
+      MaskTextInputFormatter(mask: 'XX', filter: {"X": RegExp(r'[0-9]')});
+  final MaskTextInputFormatter monthFormatter =
+      MaskTextInputFormatter(mask: 'XX', filter: {"X": RegExp(r'[0-9]')});
+  final MaskTextInputFormatter cvvFormatter =
+      MaskTextInputFormatter(mask: 'XXX', filter: {"X": RegExp(r'[0-9]')});
+  final MaskTextInputFormatter cardFormatter = MaskTextInputFormatter(
+      mask: 'XXXX XXXX XXXX XXXX', filter: {"X": RegExp(r'[0-9]')});
+
   @override
   Widget build(BuildContext context) {
     final CheckoutProvider _checkoutProvider =
@@ -52,7 +65,7 @@ class _PayViewState extends State<PayView> {
                 _yearKey.currentState.validate() &&
                 _cvvKey.currentState.validate()) {
               showLoading(context);
-              String err = await pay(_checkoutProvider, _yearController.text);
+              String err = await pay(_checkoutProvider, _cartProvider);
               if (err != null) {
                 Navigator.pop(context);
                 Scaffold.of(context).showSnackBar(SnackBar(
@@ -81,6 +94,7 @@ class _PayViewState extends State<PayView> {
         children: [
           InputComponent(
             key: _numKey,
+            inputFormatters: [cardFormatter],
             validator: _emptyValidate,
             controller: _numController,
             hint: 'Número de tarjeta',
@@ -88,12 +102,14 @@ class _PayViewState extends State<PayView> {
           ),
           InputComponent(
             key: _monthKey,
+            inputFormatters: [monthFormatter],
             validator: _emptyValidate,
             controller: _monthController,
             hint: 'Mes de expiración',
             keyboard: TextInputType.number,
           ),
           InputComponent(
+            inputFormatters: [yearFormatter],
             key: _yearKey,
             validator: _emptyValidate,
             controller: _yearController,
@@ -102,6 +118,7 @@ class _PayViewState extends State<PayView> {
           ),
           InputComponent(
             key: _cvvKey,
+            inputFormatters: [cvvFormatter],
             validator: _emptyValidate,
             controller: _cvvController,
             hint: 'CVV',
@@ -112,12 +129,13 @@ class _PayViewState extends State<PayView> {
     );
   }
 
-  Future<String> pay(CheckoutProvider checkoutProvider, String year) async {
+  Future<String> pay(
+      CheckoutProvider checkoutProvider, CartProvider cartProvider) async {
     CCard card = CCard(
       cardNumber: _numController.text,
       cvv: _cvvController.text,
       expirationMonth: int.parse(_monthController.text),
-      expirationYear: int.parse(year),
+      expirationYear: int.parse(_yearController.text),
       email: checkoutProvider.email,
     );
 
@@ -128,6 +146,20 @@ class _PayViewState extends State<PayView> {
       );
       //su token
       print(token.id);
+      http.Response res = await http.post(
+        'https://api.culqi.com/v2/charges',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + culqiKey,
+        },
+        body: jsonEncode({
+          "amount": cartProvider.orderTotal,
+          "currency_code": "PEN",
+          "email": checkoutProvider.email,
+          "source_id": token.id,
+        }),
+      );
+      print(res.statusCode);
       return null;
     } on CulqiBadRequestException catch (ex) {
       return ex.cause;

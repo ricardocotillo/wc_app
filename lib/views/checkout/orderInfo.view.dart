@@ -7,41 +7,42 @@ class OrderInfoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green,
-      body: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => HomeView(),
-          ));
-        },
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.check,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.check,
+              color: Colors.white,
+              size: 50,
+            ),
+            Text(
+              'Gracias, tu orden ha sido recibida.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
                 color: Colors.white,
-                size: 50,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                'Gracias, tu orden ha sido recibida.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            Text(
+              'Tap para regresar al inicio',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                'Tap para regresar al inicio',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => HomeView(),
+                ));
+              },
+              child: Text('Volver'),
+            ),
+          ],
         ),
       ),
     );

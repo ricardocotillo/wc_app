@@ -3,13 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_app/components/button.component.dart';
 import 'package:wc_app/components/cartItem.component.dart';
-import 'package:wc_app/components/inputButton.component.dart';
 import 'package:wc_app/components/summaryLine.component.dart';
 import 'package:wc_app/providers/cart.provider.dart';
 import 'package:wc_app/providers/customer.provider.dart';
 import 'package:wc_app/views/auth/login.view.dart';
 import 'package:wc_app/views/checkout/address.view.dart';
-import 'package:wc_app/views/checkout/orderInfo.view.dart';
 
 class CartView extends StatelessWidget {
   final TextEditingController _couponController = TextEditingController();
@@ -70,17 +68,17 @@ class CartView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(bottom: 15.0 * 3),
               ),
-              InputButtonComponent(
-                  placeHolder: _cartProvider.coupon != null
-                      ? _cartProvider.coupon.code
-                      : '¿Tienes un código de promoción?',
-                  controller: _couponController,
-                  width: size.width,
-                  onClick: () {
-                    if (_couponController.text != '') {
-                      _cartProvider.applyCoupon(_couponController.text);
-                    }
-                  }),
+              // InputButtonComponent(
+              //     placeHolder: _cartProvider.coupon != null
+              //         ? _cartProvider.coupon.code
+              //         : '¿Tienes un código de promoción?',
+              //     controller: _couponController,
+              //     width: size.width,
+              //     onClick: () {
+              //       if (_couponController.text != '') {
+              //         _cartProvider.applyCoupon(_couponController.text);
+              //       }
+              //     }),
               Padding(
                 padding: EdgeInsets.only(bottom: 15.0 * 3),
               ),
@@ -101,6 +99,16 @@ class CartView extends StatelessWidget {
                       title: 'Subtotal:',
                       summary: 'S/' + _cartProvider.totalPrice,
                     ),
+              SummaryLineComponent(
+                title: 'Envío:',
+                summary: 'S/10.00',
+              ),
+              SummaryLineComponent(
+                title: 'Total:',
+                summary: 'S/' +
+                    (double.parse(_cartProvider.totalPrice) + 10)
+                        .toStringAsFixed(2),
+              ),
               Padding(
                 padding: EdgeInsets.only(bottom: 15.0 * 3),
               ),
