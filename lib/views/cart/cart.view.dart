@@ -103,7 +103,9 @@ class CartView extends StatelessWidget {
                       ),
                       SummaryLineComponent(
                         title: 'Total:',
-                        summary: 'S/' + _cartProvider.discountedPrice,
+                        summary: 'S/' +
+                            (double.parse(_cartProvider.discountedPrice) + 10)
+                                .toStringAsFixed(2),
                       ),
                     ])
                   : Column(
