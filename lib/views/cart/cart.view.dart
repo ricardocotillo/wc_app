@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_app/components/button.component.dart';
 import 'package:wc_app/components/cartItem.component.dart';
+import 'package:wc_app/components/inputButton.component.dart';
 import 'package:wc_app/components/summaryLine.component.dart';
 import 'package:wc_app/providers/cart.provider.dart';
 import 'package:wc_app/providers/customer.provider.dart';
@@ -19,6 +20,10 @@ class CartView extends StatelessWidget {
         Provider.of<CustomerProvider>(context);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Carrito'),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -68,17 +73,18 @@ class CartView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(bottom: 15.0 * 3),
               ),
-              // InputButtonComponent(
-              //     placeHolder: _cartProvider.coupon != null
-              //         ? _cartProvider.coupon.code
-              //         : '¿Tienes un código de promoción?',
-              //     controller: _couponController,
-              //     width: size.width,
-              //     onClick: () {
-              //       if (_couponController.text != '') {
-              //         _cartProvider.applyCoupon(_couponController.text);
-              //       }
-              //     }),
+              InputButtonComponent(
+                  placeHolder: _cartProvider.coupon != null
+                      ? _cartProvider.coupon.code
+                      : '¿Tienes un código de promoción?',
+                  controller: _couponController,
+                  width: size.width,
+                  onClick: () {
+                    if (_couponController.text != '') {
+                      _cartProvider.applyCoupon(_couponController.text);
+                      FocusScope.of(context).unfocus();
+                    }
+                  }),
               Padding(
                 padding: EdgeInsets.only(bottom: 15.0 * 3),
               ),
@@ -88,27 +94,36 @@ class CartView extends StatelessWidget {
                           title: 'Subtotal:',
                           summary: 'S/' + _cartProvider.totalPrice),
                       SummaryLineComponent(
-                          title: 'Descuento:',
-                          summary: _cartProvider.discount + '%'),
+                        title: 'Descuento:',
+                        summary: '- S/' + _cartProvider.discount,
+                      ),
+                      SummaryLineComponent(
+                        title: 'Envío:',
+                        summary: 'S/10.00',
+                      ),
                       SummaryLineComponent(
                         title: 'Total:',
                         summary: 'S/' + _cartProvider.discountedPrice,
                       ),
                     ])
-                  : SummaryLineComponent(
-                      title: 'Subtotal:',
-                      summary: 'S/' + _cartProvider.totalPrice,
+                  : Column(
+                      children: [
+                        SummaryLineComponent(
+                          title: 'Subtotal:',
+                          summary: 'S/' + _cartProvider.totalPrice,
+                        ),
+                        SummaryLineComponent(
+                          title: 'Envío:',
+                          summary: 'S/10.00',
+                        ),
+                        SummaryLineComponent(
+                          title: 'Total:',
+                          summary: 'S/' +
+                              (double.parse(_cartProvider.totalPrice) + 10)
+                                  .toStringAsFixed(2),
+                        ),
+                      ],
                     ),
-              SummaryLineComponent(
-                title: 'Envío:',
-                summary: 'S/10.00',
-              ),
-              SummaryLineComponent(
-                title: 'Total:',
-                summary: 'S/' +
-                    (double.parse(_cartProvider.totalPrice) + 10)
-                        .toStringAsFixed(2),
-              ),
               Padding(
                 padding: EdgeInsets.only(bottom: 15.0 * 3),
               ),

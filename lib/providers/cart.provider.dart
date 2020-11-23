@@ -28,7 +28,9 @@ class CartProvider extends ChangeNotifier {
       .split('.')
       .join();
 
-  String get discount => _coupon.amount;
+  String get discount =>
+      (double.parse(_cart.totalPrice) * (double.parse(_coupon.amount) / 100))
+          .toStringAsFixed(2);
 
   String get discountedPrice => (double.parse(_cart.totalPrice) *
           (1 - (double.parse(_coupon.amount) / 100)))
@@ -62,13 +64,8 @@ class CartProvider extends ChangeNotifier {
   }
 
   void clear() {
-    _cart = WooCart(
-      currency: 'S/',
-      itemCount: 0,
-      items: <WooCartItems>[],
-      needsShipping: true,
-      totalPrice: '0.00',
-    );
+    _cart.items = <WooCartItems>[];
+    _updateCart();
   }
 
   void deleteItem(int index) {
