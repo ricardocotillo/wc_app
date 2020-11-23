@@ -63,13 +63,8 @@ class LoginView extends StatelessWidget {
                       );
                       return;
                     }
-                    _customerProvider.isLoggedIn = true;
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => HomeView(),
-                      ),
-                      (route) => false,
-                    );
+                    await _customerProvider.checkAuthentication();
+                    Navigator.pop(context);
                   }
                 },
               ),
