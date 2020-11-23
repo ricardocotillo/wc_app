@@ -10,6 +10,9 @@ import 'package:wc_app/providers/checkout.provider.dart';
 import 'package:wc_app/views/checkout/personalInfo.view.dart';
 
 class AddressView extends StatefulWidget {
+  final bool delivery;
+
+  const AddressView({Key key, this.delivery = false}) : super(key: key);
   @override
   _AddressViewState createState() => _AddressViewState();
 }
@@ -39,11 +42,19 @@ class _AddressViewState extends State<AddressView> {
       floatingActionButton: _address != null
           ? FloatingActionButton(
               onPressed: () {
-                _checkoutProvider.address = _address;
-                _checkoutProvider.district = _district;
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PersonalInfoView(),
-                ));
+                if (widget.delivery) {
+                  _checkoutProvider.deliveryAddress = _address;
+                  _checkoutProvider.deliveryDistrict = _district;
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PersonalInfoView(delivery: true),
+                  ));
+                } else {
+                  _checkoutProvider.address = _address;
+                  _checkoutProvider.district = _district;
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PersonalInfoView(),
+                  ));
+                }
               },
               child: Icon(FontAwesomeIcons.check),
             )

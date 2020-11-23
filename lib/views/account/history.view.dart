@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_app/config/wc.config.dart';
 import 'package:wc_app/providers/customer.provider.dart';
+import 'package:wc_app/views/account/orderDetail.view.dart';
 import 'package:woocommerce/woocommerce.dart';
 import 'package:intl/intl.dart';
 
@@ -50,7 +51,15 @@ class _HistoryViewState extends State<HistoryView> {
                   subtitle: Text(orders[i].status),
                   trailing: IconButton(
                     icon: Icon(Icons.keyboard_arrow_right),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderDetailView(
+                              order: orders[i],
+                            ),
+                          ));
+                    },
                   ),
                 ),
               );

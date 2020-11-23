@@ -202,12 +202,13 @@ class _PayViewState extends State<PayView> {
         state: checkoutProvider.getDistrictCode(),
       ),
       shipping: WooOrderPayloadShipping(
-        address1: checkoutProvider.address,
+        address1: checkoutProvider.deliveryAddress ?? checkoutProvider.address,
         city: 'Lima',
         country: 'PE',
-        firstName: checkoutProvider.name,
-        lastName: checkoutProvider.lastName,
-        state: checkoutProvider.getDistrictCode(),
+        firstName: checkoutProvider.deliveryName ?? checkoutProvider.name,
+        lastName:
+            checkoutProvider.deliveryLastName ?? checkoutProvider.lastName,
+        state: checkoutProvider.getDeliveryDistrictCode(),
       ),
       shippingLines: <ShippingLines>[
         ShippingLines(

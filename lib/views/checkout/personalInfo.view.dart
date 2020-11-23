@@ -5,14 +5,19 @@ import 'package:wc_app/common/errors.common.dart';
 import 'package:wc_app/components/input.component.dart';
 import 'package:wc_app/providers/checkout.provider.dart';
 import 'package:wc_app/providers/customer.provider.dart';
+import 'package:wc_app/views/checkout/address.view.dart';
 import 'package:wc_app/views/checkout/pay.view.dart';
 
 class PersonalInfoView extends StatefulWidget {
+  final bool delivery;
+
+  const PersonalInfoView({Key key, this.delivery = false}) : super(key: key);
   @override
   _PersonalInfoViewState createState() => _PersonalInfoViewState();
 }
 
 class _PersonalInfoViewState extends State<PersonalInfoView> {
+  bool _otraDireccion = false;
   final TextEditingController _nameController = TextEditingController(),
       _lastNameController = TextEditingController(),
       _idNumberController = TextEditingController(),
@@ -56,19 +61,40 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
         onPressed: () {
-          if (_nameKey.currentState.validate() &&
-              _lastNameKey.currentState.validate() &&
-              _phoneKey.currentState.validate() &&
-              _emailKey.currentState.validate()) {
-            _checkoutProvider.name = _nameController.text;
-            _checkoutProvider.lastName = _lastNameController.text;
-            _checkoutProvider.phone = _phoneController.text;
-            _checkoutProvider.email = _emailController.text;
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => PayView(),
-              ),
-            );
+          if (widget.delivery) {
+            if (_nameKey.currentState.validate() &&
+                _lastNameKey.currentState.validate()) {
+              _checkoutProvider.deliveryName = _nameController.text;
+              _checkoutProvider.deliveryLastName = _lastNameController.text;
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PayView(),
+                ),
+              );
+            }
+          } else {
+            if (_nameKey.currentState.validate() &&
+                _lastNameKey.currentState.validate() &&
+                _phoneKey.currentState.validate() &&
+                _emailKey.currentState.validate()) {
+              _checkoutProvider.name = _nameController.text;
+              _checkoutProvider.lastName = _lastNameController.text;
+              _checkoutProvider.phone = _phoneController.text;
+              _checkoutProvider.email = _emailController.text;
+              if (_otraDireccion) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AddressView(
+                    delivery: true,
+                  ),
+                ));
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PayView(),
+                  ),
+                );
+              }
+            }
           }
         },
       ),
@@ -92,20 +118,33 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                 controller: _lastNameController,
                 hint: 'Apellidos',
               ),
-              InputComponent(
-                key: _phoneKey,
-                validator: _emptyValidate,
-                controller: _phoneController,
-                hint: 'Teléfono',
-                keyboard: TextInputType.phone,
-              ),
-              InputComponent(
-                key: _emailKey,
-                validator: _emptyValidate,
-                controller: _emailController,
-                hint: 'Dirección de Correo',
-                keyboard: TextInputType.emailAddress,
-              ),
+              if (!widget.delivery)
+                InputComponent(
+                  key: _phoneKey,
+                  validator: _emptyValidate,
+                  controller: _phoneController,
+                  hint: 'Teléfono',
+                  keyboard: TextInputType.phone,
+                ),
+              if (!widget.delivery)
+                InputComponent(
+                  key: _emailKey,
+                  validator: _emptyValidate,
+                  controller: _emailController,
+                  hint: 'Dirección de Correo',
+                  keyboard: TextInputType.emailAddress,
+                ),
+              if (!widget.delivery)
+                CheckboxListTile(
+                  value: _otraDireccion,
+                  activeColor: Theme.of(context).primaryColor,
+                  onChanged: (bool v) {
+                    setState(() {
+                      _otraDireccion = v;
+                    });
+                  },
+                  title: Text('¿Enviar a otra dirección?'),
+                )
             ],
           ),
         ),

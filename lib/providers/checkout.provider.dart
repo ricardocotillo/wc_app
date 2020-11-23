@@ -8,7 +8,14 @@ class CheckoutProvider {
   String phone;
   String email;
 
+  String deliveryAddress;
+  String deliveryDistrict;
+  String deliveryName;
+  String deliveryLastName;
+
   String getDistrictCode() => _districts[district];
+
+  String getDeliveryDistrictCode() => _districts[deliveryDistrict ?? district];
 
   Map<String, String> _districts = {
     '070701': 'Callao',
