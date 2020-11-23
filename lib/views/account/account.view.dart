@@ -49,6 +49,9 @@ class _AccountViewState extends State<AccountView> {
                       email: _emailController.text,
                     );
                     await _customerProvider.updateCustomer(customer);
+                    setState(() {
+                      _enabled = false;
+                    });
                     Navigator.of(context).pop();
                     showSnackBar(
                       context: context,
