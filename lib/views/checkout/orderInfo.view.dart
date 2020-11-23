@@ -40,7 +40,12 @@ class OrderInfoView extends StatelessWidget {
                   builder: (context) => HomeView(),
                 ));
               },
-              child: Text('Volver'),
+              child: Text(
+                'Volver',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         ),

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:wc_app/config/wc.config.dart';
 import 'package:wc_app/providers/customer.provider.dart';
 import 'package:wc_app/views/account/account.view.dart';
+import 'package:wc_app/views/account/history.view.dart';
 import 'package:wc_app/views/auth/login.view.dart';
 
 class DrawerComponent extends StatelessWidget {
@@ -40,6 +41,11 @@ class DrawerComponent extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.history),
                 title: Text('Historial'),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => HistoryView(),
+                  ));
+                },
               ),
             _customerProvider.isLoggedIn
                 ? ListTile(

@@ -11,6 +11,7 @@ import 'package:wc_app/components/input.component.dart';
 import 'package:wc_app/config/wc.config.dart';
 import 'package:wc_app/providers/cart.provider.dart';
 import 'package:wc_app/providers/checkout.provider.dart';
+import 'package:wc_app/providers/customer.provider.dart';
 import 'package:wc_app/views/checkout/orderInfo.view.dart';
 import 'package:woocommerce/models/order_payload.dart';
 import 'package:woocommerce/woocommerce.dart';
@@ -51,6 +52,8 @@ class _PayViewState extends State<PayView> {
     final CheckoutProvider _checkoutProvider =
         Provider.of<CheckoutProvider>(context);
     final CartProvider _cartProvider = Provider.of<CartProvider>(context);
+    final CustomerProvider _customerProvider =
+        Provider.of<CustomerProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Pago'),
@@ -74,8 +77,8 @@ class _PayViewState extends State<PayView> {
                 ));
                 return;
               }
-              WooOrder order =
-                  await sendOrder(_cartProvider, _checkoutProvider);
+              WooOrder order = await sendOrder(
+                  _cartProvider, _checkoutProvider, _customerProvider);
               print(order.id);
               _cartProvider.clear();
               Navigator.pop(context);
@@ -170,9 +173,18 @@ class _PayViewState extends State<PayView> {
   }
 
   Future<WooOrder> sendOrder(
-      CartProvider cartProvider, CheckoutProvider checkoutProvider) async {
+    CartProvider cartProvider,
+    CheckoutProvider checkoutProvider,
+    CustomerProvider customerProvider,
+  ) async {
     WooOrderPayload orderPayload = WooOrderPayload(
       setPaid: true,
+      customerId: customerProvider.customer.id,
+      couponLines: cartProvider.coupon != null
+          ? [
+              WooOrderPayloadCouponLines(code: cartProvider.coupon.code),
+            ]
+          : null,
       lineItems: cartProvider.cart.items
           .map((e) => LineItems(
                 productId: e.id,
