@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wc_app/common/errors.common.dart';
 
 void showLoading(BuildContext context) {
   showDialog(
@@ -45,4 +46,9 @@ enum SnackBarType {
 
 String getFormattedPrice(String price) {
   return 'S/' + price;
+}
+
+String emptyValidate(String s) {
+  if (s.isEmpty || s == '') return ErrorsCommon.required;
+  return null;
 }

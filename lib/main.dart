@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           color: Color(0xFF003e45),
         ),
+        primaryColor: Color(0xFF003E45),
         colorScheme: ColorScheme(
           primary: Color(0xFF003E45),
           primaryVariant: Color(0xFFBA9A69),

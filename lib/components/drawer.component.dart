@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_app/config/wc.config.dart';
 import 'package:wc_app/providers/customer.provider.dart';
+import 'package:wc_app/views/account/account.view.dart';
 import 'package:wc_app/views/auth/login.view.dart';
 
 class DrawerComponent extends StatelessWidget {
@@ -25,6 +26,21 @@ class DrawerComponent extends StatelessWidget {
               leading: Icon(Icons.home),
               title: Text('Inicio'),
             ),
+            if (_customerProvider.isLoggedIn)
+              ListTile(
+                leading: Icon(Icons.account_circle),
+                title: Text('Mis datos'),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AccountView(),
+                  ));
+                },
+              ),
+            if (_customerProvider.isLoggedIn)
+              ListTile(
+                leading: Icon(Icons.history),
+                title: Text('Historial'),
+              ),
             _customerProvider.isLoggedIn
                 ? ListTile(
                     leading: Icon(Icons.exit_to_app),
