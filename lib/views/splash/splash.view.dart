@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wc_app/providers/cart.provider.dart';
+import 'package:wc_app/providers/customer.provider.dart';
 import 'package:wc_app/providers/mainView.provider.dart';
 import 'package:wc_app/views/home.view.dart';
 
@@ -18,6 +19,7 @@ class _SplashViewState extends State<SplashView> {
       Provider.of<MainViewProvider>(context).getCategories(),
       Provider.of<MainViewProvider>(context).getProducts(),
       Provider.of<CartProvider>(context).getCartData(),
+      Provider.of<CustomerProvider>(context).checkAuthentication(),
     ]).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => HomeView(),

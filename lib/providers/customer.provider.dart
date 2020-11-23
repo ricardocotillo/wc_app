@@ -8,17 +8,12 @@ class CustomerProvider extends ChangeNotifier {
   bool _isLoggedIn = false;
   FlutterSecureStorage _storage = FlutterSecureStorage();
 
-  CustomerProvider() {
-    checkAuthentication();
-  }
-
   Future<void> checkAuthentication() async {
     _isLoggedIn = await woocommerce.isCustomerLoggedIn();
     if (_isLoggedIn) {
       final String customerId = await _storage.read(key: 'customer_id');
       _customer = await woocommerce.getCustomerById(id: int.parse(customerId));
     }
-    notifyListeners();
   }
 
   Future<void> updateCustomer(WooCustomer customer) async {
