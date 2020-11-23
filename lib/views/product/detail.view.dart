@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:wc_app/common/functions.common.dart';
 import 'package:wc_app/components/button.component.dart';
+import 'package:wc_app/providers/cart.provider.dart';
 import 'package:woocommerce/woocommerce.dart';
 import 'package:html/parser.dart';
 
-class ProductDetailView extends StatelessWidget {
+class ProductDetailView extends StatefulWidget {
   final WooProduct product;
 
   const ProductDetailView({Key key, this.product}) : super(key: key);
 
   @override
+  _ProductDetailViewState createState() => _ProductDetailViewState();
+}
+
+class _ProductDetailViewState extends State<ProductDetailView> {
+  int _quantity = 1;
+  @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final CartProvider _cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.product.name),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Stack(
           alignment: Alignment.topCenter,
@@ -25,7 +38,7 @@ class ProductDetailView extends StatelessWidget {
               width: size.width,
             ),
             Image.network(
-              product.images[0].src,
+              widget.product.images[0].src,
               fit: BoxFit.fitWidth,
             ),
             Positioned(
@@ -33,15 +46,16 @@ class ProductDetailView extends StatelessWidget {
               child: IconButton(
                 icon: Icon(FontAwesomeIcons.share),
                 onPressed: () {
-                  Share.share('${product.name}: ${product.permalink}');
+                  Share.share(
+                      '${widget.product.name}: ${widget.product.permalink}');
                 },
               ),
             ),
-            if (product.sku != null)
+            if (widget.product.sku != null)
               Positioned(
                 top: 10,
                 left: 10,
-                child: Text('SKU: ' + product.sku),
+                child: Text('SKU: ' + widget.product.sku),
               ),
             Positioned(
               bottom: 0,
@@ -70,7 +84,7 @@ class ProductDetailView extends StatelessWidget {
                           vertical: 15,
                         ),
                         child: Text(
-                          product.name,
+                          widget.product.name,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.primary,
@@ -82,7 +96,7 @@ class ProductDetailView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          product.categories[0].name,
+                          widget.product.categories[0].name,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -98,25 +112,28 @@ class ProductDetailView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          parse(product.shortDescription).documentElement.text,
+                          parse(widget.product.shortDescription)
+                              .documentElement
+                              .text,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text.rich(
                           TextSpan(
-                            text: '${getFormattedPrice(product.price)}  ',
+                            text:
+                                '${getFormattedPrice(widget.product.price)}  ',
                             style: TextStyle(
                               color:
                                   Theme.of(context).colorScheme.primaryVariant,
                               fontWeight: FontWeight.bold,
                               fontSize: 25.0,
                             ),
-                            children: product.onSale
+                            children: widget.product.onSale
                                 ? <TextSpan>[
                                     TextSpan(
                                       text: getFormattedPrice(
-                                          product.regularPrice),
+                                          widget.product.regularPrice),
                                       style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
@@ -130,11 +147,55 @@ class ProductDetailView extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: () {
+                                setState(() {
+                                  _quantity =
+                                      _quantity == 1 ? 1 : _quantity - 1;
+                                });
+                              },
+                            ),
+                            Text(
+                              _quantity.toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                setState(() {
+                                  _quantity++;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                       Align(
-                        child: ButtonComponent(
-                          icon: FontAwesomeIcons.shoppingBag,
-                          title: 'Agregar a carrito',
-                          onPressed: () {},
+                        child: Builder(
+                          builder: (context) => ButtonComponent(
+                            icon: FontAwesomeIcons.shoppingBag,
+                            title: 'Agregar a carrito',
+                            onPressed: () async {
+                              await _cartProvider.addToCart(
+                                widget.product,
+                                quantity: _quantity,
+                              );
+                              showSnackBar(
+                                context: context,
+                                msg: 'Producto agregado',
+                                type: SnackBarType.success,
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
