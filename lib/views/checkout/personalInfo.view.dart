@@ -22,7 +22,8 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
       _lastNameController = TextEditingController(),
       _idNumberController = TextEditingController(),
       _phoneController = TextEditingController(),
-      _emailController = TextEditingController();
+      _emailController = TextEditingController(),
+      _dniController = TextEditingController();
 
   final GlobalKey<InputComponentState> _nameKey =
       GlobalKey<InputComponentState>();
@@ -31,6 +32,8 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
   final GlobalKey<InputComponentState> _phoneKey =
       GlobalKey<InputComponentState>();
   final GlobalKey<InputComponentState> _emailKey =
+      GlobalKey<InputComponentState>();
+  final GlobalKey<InputComponentState> _dniKey =
       GlobalKey<InputComponentState>();
 
   @override
@@ -76,11 +79,13 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
             if (_nameKey.currentState.validate() &&
                 _lastNameKey.currentState.validate() &&
                 _phoneKey.currentState.validate() &&
-                _emailKey.currentState.validate()) {
+                _emailKey.currentState.validate() &&
+                _dniKey.currentState.validate()) {
               _checkoutProvider.name = _nameController.text;
               _checkoutProvider.lastName = _lastNameController.text;
               _checkoutProvider.phone = _phoneController.text;
               _checkoutProvider.email = _emailController.text;
+              _checkoutProvider.dni = _dniController.text;
               if (_otraDireccion) {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => AddressView(
@@ -118,6 +123,14 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                 controller: _lastNameController,
                 hint: 'Apellidos',
               ),
+              if (widget.delivery)
+                InputComponent(
+                  key: _dniKey,
+                  controller: _dniController,
+                  validator: _emptyValidate,
+                  hint: 'DNI',
+                  keyboard: TextInputType.number,
+                ),
               if (!widget.delivery)
                 InputComponent(
                   key: _phoneKey,

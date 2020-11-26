@@ -7,6 +7,7 @@ class CheckoutProvider {
   String idNum;
   String phone;
   String email;
+  String dni;
 
   String deliveryAddress;
   String deliveryDistrict;

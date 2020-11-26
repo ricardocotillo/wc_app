@@ -191,6 +191,12 @@ class _PayViewState extends State<PayView> {
                 quantity: e.quantity,
               ))
           .toList(),
+      metaData: <WooOrderPayloadMetaData>[
+        WooOrderPayloadMetaData(
+          key: '_billing_wooccm11',
+          value: '44792873',
+        ),
+      ],
       billing: WooOrderPayloadBilling(
         address1: checkoutProvider.address,
         city: 'Lima',
