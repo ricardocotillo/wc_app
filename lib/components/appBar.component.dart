@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:wc_app/providers/cart.provider.dart';
 import 'package:wc_app/views/cart/cart.view.dart';
 
-AppBar appBar(String title) {
+AppBar appBar(Widget title) {
   return AppBar(
-    title: Text(title),
+    title: title,
     centerTitle: true,
     actions: [
       BagIcon(),

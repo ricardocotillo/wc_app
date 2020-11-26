@@ -13,7 +13,10 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final MainViewProvider _mvProvider = Provider.of<MainViewProvider>(context);
     return Scaffold(
-      appBar: appBar('BP'),
+      appBar: appBar(Image.asset(
+        'assets/logos/logo_negativo.png',
+        height: 20,
+      )),
       drawer: DrawerComponent(),
       body: Column(
         children: [

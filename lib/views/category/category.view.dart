@@ -28,7 +28,7 @@ class _CategoryViewState extends State<CategoryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(widget.category.name),
+      appBar: appBar(Text(widget.category.name)),
       body: FutureBuilder(
           future: _future,
           builder: (context, AsyncSnapshot<List<WooProduct>> snap) {
