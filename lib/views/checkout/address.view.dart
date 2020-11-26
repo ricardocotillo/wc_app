@@ -8,10 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:wc_app/providers/checkout.provider.dart';
 import 'package:wc_app/views/checkout/personalInfo.view.dart';
+import 'package:geocoding/geocoding.dart';
 
 class AddressView extends StatefulWidget {
   final bool delivery;
-
+  final apiKey = 'AIzaSyBdmrOPOTyhh7XKkjReNcEu4jVx-fieKhM';
   const AddressView({Key key, this.delivery = false}) : super(key: key);
   @override
   _AddressViewState createState() => _AddressViewState();
@@ -22,7 +23,7 @@ class _AddressViewState extends State<AddressView> {
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(-12.046374, -77.042793),
-    zoom: 14.4746,
+    zoom: 17,
   );
 
   Marker _marker = Marker(
@@ -34,12 +35,14 @@ class _AddressViewState extends State<AddressView> {
 
   String _district;
 
+  Widget _addressWidget;
+
   @override
   Widget build(BuildContext context) {
     final CheckoutProvider _checkoutProvider =
         Provider.of<CheckoutProvider>(context);
     return Scaffold(
-      floatingActionButton: _address != null
+      floatingActionButton: _addressWidget != null || _address != null
           ? FloatingActionButton(
               onPressed: () {
                 if (widget.delivery) {
@@ -66,44 +69,99 @@ class _AddressViewState extends State<AddressView> {
             GoogleMap(
               mapType: MapType.normal,
               initialCameraPosition: _kGooglePlex,
+              scrollGesturesEnabled: true,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
-              liteModeEnabled: true,
-              zoomControlsEnabled: false,
+              onTap: (LatLng latLng) async {
+                Widget addressWidget = await showAddress(latLng);
+                setState(() {
+                  _addressWidget = addressWidget;
+                  _marker = Marker(
+                    markerId: MarkerId('position'),
+                    position: latLng,
+                  );
+                });
+              },
+              zoomGesturesEnabled: true,
               markers: Set<Marker>.of([_marker]),
             ),
-            Positioned(
-              top: 15,
-              child: SearchMapPlaceWidget(
-                apiKey: 'AIzaSyBdmrOPOTyhh7XKkjReNcEu4jVx-fieKhM',
-                onSelected: (Place place) async {
-                  Geolocation geo = await place.geolocation;
-                  var component = (geo.fullJSON['address_components'] as List)
-                      .firstWhere((ac) => (ac['types'] as List)
-                          .any((element) => element == 'locality'));
+            _addressWidget != null
+                ? Card(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 15),
+                            child: _addressWidget,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.cancel),
+                          onPressed: () {
+                            setState(() {
+                              _addressWidget = null;
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                  )
+                : Positioned(
+                    top: 15,
+                    child: SearchMapPlaceWidget(
+                      apiKey: 'AIzaSyBdmrOPOTyhh7XKkjReNcEu4jVx-fieKhM',
+                      language: 'es',
+                      placeholder: 'Escribe tu dirección aquí',
+                      onSelected: (Place place) async {
+                        Geolocation geo = await place.geolocation;
+                        var component =
+                            (geo.fullJSON['address_components'] as List)
+                                .firstWhere((ac) => (ac['types'] as List)
+                                    .any((element) => element == 'locality'));
 
-                  setState(() {
-                    _district = component['long_name'];
-                    _address = place.description;
-                    _marker = Marker(
-                      markerId: MarkerId('position'),
-                      position: geo.coordinates,
-                    );
-                  });
-                  final GoogleMapController controller =
-                      await _controller.future;
-                  controller.animateCamera(
-                      CameraUpdate.newCameraPosition(CameraPosition(
-                    target: geo.coordinates,
-                    zoom: 19,
-                  )));
-                },
-              ),
-            ),
+                        setState(() {
+                          _district = component['long_name'];
+                          _address = place.description;
+                          _marker = Marker(
+                            markerId: MarkerId('position'),
+                            position: geo.coordinates,
+                          );
+                        });
+                        final GoogleMapController controller =
+                            await _controller.future;
+                        controller.animateCamera(
+                            CameraUpdate.newCameraPosition(CameraPosition(
+                          target: geo.coordinates,
+                          zoom: 19,
+                        )));
+                      },
+                    ),
+                  ),
           ],
         ),
       ),
     );
+  }
+
+  Future<Widget> showAddress(LatLng latLng) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      latLng.latitude,
+      latLng.longitude,
+    );
+    if (placemarks.length > 0) {
+      setState(() {
+        _district = placemarks[0].locality;
+        _address =
+            '${placemarks[0].street}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}';
+      });
+      return Text(_address);
+    }
+    return null;
   }
 }
