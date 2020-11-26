@@ -7,6 +7,7 @@ import 'package:wc_app/providers/customer.provider.dart';
 import 'package:wc_app/views/account/account.view.dart';
 import 'package:wc_app/views/account/history.view.dart';
 import 'package:wc_app/views/auth/login.view.dart';
+import 'package:wc_app/views/terms.view.dart';
 
 class DrawerComponent extends StatelessWidget {
   @override
@@ -67,6 +68,20 @@ class DrawerComponent extends StatelessWidget {
                     ),
                     title: Text('Ingresar'),
                   ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 2,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ListTile(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TermsView(),
+                  )),
+                  leading: Icon(Icons.sticky_note_2),
+                  title: Text('Términos y condiciones'),
+                ),
+              ),
+            ),
           ],
         ),
       ),
