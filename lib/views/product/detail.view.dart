@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,10 +38,11 @@ class _ProductDetailViewState extends State<ProductDetailView> {
               height: size.height,
               width: size.width,
             ),
-            Image.network(
-              widget.product.images[0].src,
-              fit: BoxFit.fitWidth,
-            ),
+            widget.product.images.length > 0
+                ? CachedNetworkImage(
+                    imageUrl: widget.product.images[0].src,
+                    fit: BoxFit.fitWidth)
+                : Image.asset('assets/img/generic_product.png'),
             Positioned(
               right: 10,
               child: IconButton(
