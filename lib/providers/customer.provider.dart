@@ -29,11 +29,16 @@ class CustomerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loginCustomer(String username, String password) async {
-    _customer = await woocommerce.loginCustomer(
+  Future<String> loginCustomer(String username, String password) async {
+    dynamic login = await woocommerce.loginCustomer(
       username: username,
       password: password,
     );
+    if (login is String) {
+      return login;
+    } else {
+      _customer = login;
+    }
     await _storage.write(key: 'customer_id', value: _customer.id.toString());
     notifyListeners();
   }

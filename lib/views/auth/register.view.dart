@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:html/parser.dart';
 import 'package:wc_app/common/errors.common.dart';
 import 'package:wc_app/common/functions.common.dart';
 import 'package:wc_app/components/input.component.dart';
@@ -47,7 +50,15 @@ class _RegisterViewState extends State<RegisterView> {
                 password: _passwordController.text,
                 email: _emailController.text,
               );
-              bool created = await woocommerce.createCustomer(customer);
+              bool created = false;
+              try {
+                created = await woocommerce.createCustomer(customer);
+              } catch (e) {
+                showSnackBar(
+                    context: context,
+                    msg: parse(e.toString()).documentElement.text,
+                    type: SnackBarType.danger);
+              }
               if (created) {
                 _firstNameController.clear();
                 _lastNameController.clear();
@@ -57,13 +68,11 @@ class _RegisterViewState extends State<RegisterView> {
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text('Usuario creado'),
                 ));
+                Navigator.pop(context);
+                Navigator.pop(context);
               } else {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text('Hubo un error, intentar más tarde.'),
-                  backgroundColor: Colors.red,
-                ));
+                Navigator.pop(context);
               }
-              Navigator.pop(context);
             }
           },
           child: Icon(Icons.check),
