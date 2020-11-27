@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wc_app/views/home.view.dart';
+import 'package:woocommerce/woocommerce.dart';
 
 class OrderInfoView extends StatelessWidget {
+  final WooOrder order;
+
+  const OrderInfoView({Key key, this.order}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    String orderNumber = order.metaData
+        .firstWhere((element) => element.key == '_order_number')
+        .value;
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -17,11 +24,11 @@ class OrderInfoView extends StatelessWidget {
               size: 50,
             ),
             Text(
-              'Gracias, tu orden ha sido recibida.',
+              'Gracias, tu orden #$orderNumber ha sido recibida.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 25,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -31,10 +38,11 @@ class OrderInfoView extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
               ),
             ),
-            FlatButton(
+            RaisedButton(
+              color: Theme.of(context).colorScheme.primaryVariant,
+              elevation: 1,
               onPressed: () {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => HomeView(),

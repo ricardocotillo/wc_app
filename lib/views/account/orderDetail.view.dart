@@ -13,9 +13,12 @@ class OrderDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String orderNumber = order.metaData
+        .firstWhere((element) => element.key == '_order_number')
+        .value;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orden #${order.id}'),
+        title: Text('Orden #$orderNumber'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -37,8 +40,13 @@ class OrderDetailView extends StatelessWidget {
                     .map((e) => ListTile(
                           title: Text.rich(
                             TextSpan(
-                              text: e.name,
                               children: <TextSpan>[
+                                TextSpan(
+                                  text: e.name,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
                                 TextSpan(
                                   text: ' x${e.quantity}',
                                   style: TextStyle(

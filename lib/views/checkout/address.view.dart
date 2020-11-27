@@ -37,6 +37,8 @@ class _AddressViewState extends State<AddressView> {
 
   Widget _addressWidget;
 
+  LatLng _latLng;
+
   @override
   Widget build(BuildContext context) {
     final CheckoutProvider _checkoutProvider =
@@ -48,12 +50,14 @@ class _AddressViewState extends State<AddressView> {
                 if (widget.delivery) {
                   _checkoutProvider.deliveryAddress = _address;
                   _checkoutProvider.deliveryDistrict = _district;
+                  _checkoutProvider.deliveryLatLng = _latLng;
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => PersonalInfoView(delivery: true),
                   ));
                 } else {
                   _checkoutProvider.address = _address;
                   _checkoutProvider.district = _district;
+                  _checkoutProvider.latLng = _latLng;
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => PersonalInfoView(),
                   ));
@@ -77,6 +81,7 @@ class _AddressViewState extends State<AddressView> {
                 Widget addressWidget = await showAddress(latLng);
                 setState(() {
                   _addressWidget = addressWidget;
+                  _latLng = latLng;
                   _marker = Marker(
                     markerId: MarkerId('position'),
                     position: latLng,
@@ -128,6 +133,7 @@ class _AddressViewState extends State<AddressView> {
                         setState(() {
                           _district = component['long_name'];
                           _address = place.description;
+                          _latLng = geo.coordinates;
                           _marker = Marker(
                             markerId: MarkerId('position'),
                             position: geo.coordinates,

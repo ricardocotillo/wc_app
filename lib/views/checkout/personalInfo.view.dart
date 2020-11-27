@@ -78,9 +78,9 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
           } else {
             if (_nameKey.currentState.validate() &&
                 _lastNameKey.currentState.validate() &&
+                _dniKey.currentState.validate() &&
                 _phoneKey.currentState.validate() &&
-                _emailKey.currentState.validate() &&
-                _dniKey.currentState.validate()) {
+                _emailKey.currentState.validate()) {
               _checkoutProvider.name = _nameController.text;
               _checkoutProvider.lastName = _lastNameController.text;
               _checkoutProvider.phone = _phoneController.text;
@@ -123,7 +123,7 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                 controller: _lastNameController,
                 hint: 'Apellidos',
               ),
-              if (widget.delivery)
+              if (!widget.delivery)
                 InputComponent(
                   key: _dniKey,
                   controller: _dniController,

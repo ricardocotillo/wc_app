@@ -84,7 +84,7 @@ class _PayViewState extends State<PayView> {
               Navigator.pop(context);
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
-                  builder: (context) => OrderInfoView(),
+                  builder: (context) => OrderInfoView(order: order),
                 ),
                 (route) => false,
               );
@@ -193,8 +193,28 @@ class _PayViewState extends State<PayView> {
           .toList(),
       metaData: <WooOrderPayloadMetaData>[
         WooOrderPayloadMetaData(
-          key: '_billing_wooccm11',
-          value: '44792873',
+          key: '_billing_wooccm12',
+          value: checkoutProvider.dni,
+        ),
+        WooOrderPayloadMetaData(
+          key: '_billing_wooccm17',
+          value: checkoutProvider.latLng.latitude.toString(),
+        ),
+        WooOrderPayloadMetaData(
+          key: '_billing_wooccm18',
+          value: checkoutProvider.latLng.longitude.toString(),
+        ),
+        WooOrderPayloadMetaData(
+          key: '_shipping_wooccm10',
+          value: checkoutProvider.deliveryLatLng != null
+              ? checkoutProvider.latLng.latitude.toString()
+              : checkoutProvider.latLng.latitude.toString(),
+        ),
+        WooOrderPayloadMetaData(
+          key: '_shipping_wooccm11',
+          value: checkoutProvider.deliveryLatLng != null
+              ? checkoutProvider.latLng.longitude.toString()
+              : checkoutProvider.latLng.longitude.toString(),
         ),
       ],
       billing: WooOrderPayloadBilling(
@@ -214,7 +234,9 @@ class _PayViewState extends State<PayView> {
         firstName: checkoutProvider.deliveryName ?? checkoutProvider.name,
         lastName:
             checkoutProvider.deliveryLastName ?? checkoutProvider.lastName,
-        state: checkoutProvider.getDeliveryDistrictCode(),
+        state: checkoutProvider.deliveryDistrict != null
+            ? checkoutProvider.getDeliveryDistrictCode()
+            : checkoutProvider.getDistrictCode(),
       ),
       shippingLines: <ShippingLines>[
         ShippingLines(

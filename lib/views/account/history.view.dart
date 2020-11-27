@@ -40,7 +40,11 @@ class _HistoryViewState extends State<HistoryView> {
                 itemBuilder: (context, int i) => ListTile(
                   title: Text(
                     '#' +
-                        orders[i].id.toString() +
+                        orders[i]
+                            .metaData
+                            .firstWhere(
+                                (element) => element.key == '_order_number')
+                            .value +
                         ' - ' +
                         DateFormat.yMd('es')
                             .format(DateTime.parse(orders[i].dateCreated)),

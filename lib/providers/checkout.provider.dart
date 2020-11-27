@@ -1,3 +1,5 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class CheckoutProvider {
   String address;
   String district;
@@ -8,11 +10,13 @@ class CheckoutProvider {
   String phone;
   String email;
   String dni;
+  LatLng latLng;
 
   String deliveryAddress;
   String deliveryDistrict;
   String deliveryName;
   String deliveryLastName;
+  LatLng deliveryLatLng;
 
   String getDistrictCode() => _districts[district];
 

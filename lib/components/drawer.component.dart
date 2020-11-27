@@ -24,10 +24,11 @@ class DrawerComponent extends StatelessWidget {
               'assets/logos/logo_original.png',
               width: 70,
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Inicio'),
-            ),
+            if (_customerProvider.isLoggedIn)
+              ListTile(
+                title:
+                    Text('Hola, ' + _customerProvider.customer.firstName ?? ''),
+              ),
             if (_customerProvider.isLoggedIn)
               ListTile(
                 leading: Icon(Icons.account_circle),
