@@ -100,15 +100,23 @@ class _ProductComponentState extends State<ProductComponent> {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ProductDetailView(
-                  product: widget.product,
+          Align(
+            alignment: Alignment.center,
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailView(
+                    product: widget.product,
+                  ),
                 ),
               ),
+              child: widget.product.images.length > 0
+                  ? CachedNetworkImage(imageUrl: widget.product.images[0].src)
+                  : Image.asset(
+                      'assets/img/generic_product.png',
+                      height: 187,
+                    ),
             ),
-            child: CachedNetworkImage(imageUrl: widget.product.images[0].src),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
